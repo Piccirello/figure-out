@@ -1,2 +1,2 @@
-# findout-scripts
-Scripts I write impropmtu when needing to figure out if/how something works
+# figure out
+These are scripts I've written when trying to figure out if and/or how something works.
