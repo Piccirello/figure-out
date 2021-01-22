@@ -1,0 +1,29 @@
+// Testing: Can multiple throws be handled by multiple catch functions
+// Result: No, the second catch is useless, and the second throw will be unhandled (in both test functions below)
+
+async function execute() {
+  const a = new Promise(() => { throw new Error("a") })
+  const b = new Promise(() => { setTimeout(() => { throw new Error("b") }, 1000) })
+
+  // when b throws, it's uncaught
+  await Promise.race([a, b])
+    .then(() => console.log("this shouldn't run"))
+    .catch(e => console.log(`caught ${e.message}`))
+}
+async function executeDoubleCatch() {
+  const a = new Promise(() => { throw new Error("a") })
+  const b = new Promise(() => { setTimeout(() => { throw new Error("b") }, 1000) })
+
+  // b is still uncaught
+  await Promise.race([a, b])
+    .then(() => console.log("this shouldn't run"))
+    .catch(e => console.log(`caught ${e.message}`))
+    .catch(e => console.log(`caught ${e.message}`))
+}
+
+process.on("uncaughtException", (error) => {
+  console.error(`Uncaught ${error}`)
+})
+
+execute()
+executeDoubleCatch()
