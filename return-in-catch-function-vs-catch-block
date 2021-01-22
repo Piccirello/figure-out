@@ -1,0 +1,30 @@
+// Testing: is returning from inside a catch function handled differently than returning from inside a catch block
+// Result: yes, as expected
+
+async function catchFunction() {
+  await (async () => { throw new Error("catch function test")})().catch(e => {
+    console.log("Error:", e.message)
+    return 123
+  })
+  // this should get printed
+  console.log("ok 1")
+}
+
+async function catchBlock() {
+  try {
+    await (async () => { throw new Error("catch block test")})()
+  } catch(e) {
+    console.log("Error:", e.message)
+    return 123
+  }
+  // this should NOT get printed
+  console.log("ok 2")
+}
+
+async function main() {
+  await catchFunction()
+  await catchBlock()
+}
+
+main()
+
